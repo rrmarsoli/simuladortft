@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulador de TFT</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #000;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+  
+  #container {
+    background-color: #1a1a1a;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+    color: white;
+  }
+  
+  h1 {
+    margin-top: 0;
+    font-size: 24px;
+  }
+  
+  h2 {
+    margin-top: 20px;
+    font-size: 18px;
+  }
+  
+  button {
+    background-color: #ff3f34;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 16px;
+    margin: 10px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+    text-align: left;
+    font-size: 16px;
+    margin-top: 10px;
+  }
+  
+  li {
+    margin-bottom: 10px;
+  }
+
+  #counter {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 10px;
+    color: #ff3f34;
+  }
+</style>
+</head>
+<body>
+<div id="container">
+  <h1>Simulador de TFT</h1>
+  <h2>Feito para a Pamzinha</h2>
+  <p>Selecione a quantidade de baús que quer abrir:</p>
+  <button id="openOne">Abrir 1 Baú</button>
+  <button id="openTen">Abrir 10 Baús</button>
+  <h2>Resultados:</h2>
+  <ul id="results"></ul>
+  <div id="counter">Baús até o Capeteemo: 60</div>
+</div>
+
+<script>
+const prizes = [
+  { name: "Capeteemo Chibi", rarity: "Estelar", chance: 1 },
+  { name: "Acuaminas", rarity: "Destaque", chance: 1.25 },
+  { name: "Arena Infernal", rarity: "Destaque", chance: 1.25 },
+  { name: "Arena Supernova", rarity: "Destaque", chance: 1.25 },
+  { name: "Bando Infernal", rarity: "Destaque", chance: 1.25 },
+  { name: "Besourineo", rarity: "Destaque", chance: 1.25 },
+  { name: "Espirito Caótico", rarity: "Destaque", chance: 1.25 },
+  { name: "Horuja", rarity: "Destaque", chance: 1.25 },
+  { name: "Khat'Sai", rarity: "Destaque", chance: 1.25 },
+  { name: "Pedrito", rarity: "Destaque", chance: 1.25 },
+  { name: "Protetor", rarity: "Destaque", chance: 1.25 },
+  { name: "Rapininha", rarity: "Destaque", chance: 1.25 },
+  { name: "Runirim", rarity: "Destaque", chance: 1.25 },
+  { name: "Abyssia", rarity: "Padrão", chance: 2.27 },
+  { name: "Ao Shin", rarity: "Padrão", chance: 2.27 },
+  { name: "Aronguinho", rarity: "Padrão", chance: 2.27 },
+  { name: "Assombrim", rarity: "Padrão", chance: 2.27 },
+  { name: "Bigodes", rarity: "Padrão", chance: 2.27 },
+  { name: "Bungo", rarity: "Padrão", chance: 2.27 },
+  { name: "Cenorita", rarity: "Padrão", chance: 2.27 },
+  { name: "Choncc", rarity: "Padrão", chance: 2.27 },
+  { name: "Corceluz", rarity: "Padrão", chance: 2.27 },
+  { name: "Dango", rarity: "Padrão", chance: 2.27 },
+  { name: "Dracoel", rarity: "Padrão", chance: 2.27 },
+  { name: "Feitissereia", rarity: "Padrão", chance: 2.27 },
+  { name: "Felpina", rarity: "Padrão", chance: 2.27 },
+  { name: "Fenroz", rarity: "Padrão", chance: 2.27 },
+  { name: "Fuwa", rarity: "Padrão", chance: 2.27 },
+  { name: "Glup", rarity: "Padrão", chance: 2.27 },
+  { name: "Guláxia", rarity: "Padrão", chance: 2.27 },
+  { name: "Melisma", rarity: "Padrão", chance: 2.27 },
+  { name: "Molula", rarity: "Padrão", chance: 2.27 },
+  { name: "Nixie", rarity: "Padrão", chance: 2.27 },
+  { name: "Noctero", rarity: "Padrão", chance: 2.27 },
+  { name: "Ornitoninho", rarity: "Padrão", chance: 2.27 },
+  { name: "Ossia", rarity: "Padrão", chance: 2.27 },
+  { name: "Peludinho", rarity: "Padrão", chance: 2.27 },
+  { name: "Piximander", rarity: "Padrão", chance: 2.27 },
+  { name: "Plumário", rarity: "Padrão", chance: 2.27 },
+  { name: "Póguis", rarity: "Padrão", chance: 2.27 },
+  { name: "QiQi", rarity: "Padrão", chance: 2.27 },
+  { name: "Ranzinzim", rarity: "Padrão", chance: 2.27 },
+  { name: "Ratuninho", rarity: "Padrão", chance: 2.27 },
+  { name: "Saltim", rarity: "Padrão", chance: 2.27 },
+  { name: "Shisa", rarity: "Padrão", chance: 2.27 },
+  { name: "Taluga", rarity: "Padrão", chance: 2.27 },
+  { name: "Territo", rarity: "Padrão", chance: 2.27 },
+  { name: "Tintilantus", rarity: "Padrão", chance: 2.27 },
+  { name: "Tutu", rarity: "Padrão", chance: 2.27 },
+  { name: "Umbra", rarity: "Padrão", chance: 2.27 }
+];
+
+
+let capeteemoCounter = 60;
+
+document.getElementById("openOne").addEventListener("click", () => simulateGacha(1));
+document.getElementById("openTen").addEventListener("click", () => simulateGacha(10));
+
+function simulateGacha(numBaus) {
+  const resultsList = document.getElementById("results");
+  const counterDisplay = document.getElementById("counter");
+  resultsList.innerHTML = "";
+
+  const openedPrizes = [];
+  let obtainedCapeteemo = false;
+
+  for (let i = 1; i <= numBaus; i++) {
+    if (capeteemoCounter <= 0) {
+      obtainedCapeteemo = true;
+      capeteemoCounter = 60;
+    }
+
+    const result = getRandomPrize(openedPrizes);
+    openedPrizes.push(result);
+
+    if (result.name === "Capeteemo Chibi") {
+      obtainedCapeteemo = true;
+      capeteemoCounter = 60;
+    }
+
+    capeteemoCounter--;
+
+    const listItem = document.createElement("li");
+    listItem.textContent = `Baú ${i}: ${result.rarity} - ${result.name}`;
+    resultsList.appendChild(listItem);
+  }
+
+  if (obtainedCapeteemo) {
+    const congratulationsMessage = document.createElement("p");
+    congratulationsMessage.textContent = "Parabéns! Você ganhou o Capeteemo Chibi!";
+    congratulationsMessage.style.color = "red";  // Adiciona a cor vermelha
+    congratulationsMessage.style.fontWeight = "bold";  // Aplica negrito
+    resultsList.appendChild(congratulationsMessage);
+  }
+
+  counterDisplay.textContent = `Baús até o Capeteemo: ${capeteemoCounter}`;
+}
+
+function getRandomPrize(openedPrizes) {
+  const availablePrizes = prizes.filter(prize => !openedPrizes.includes(prize));
+  const totalChances = availablePrizes.reduce((sum, prize) => sum + prize.chance, 0);
+  const randomValue = Math.random() * totalChances;
+
+  let currentSum = 0;
+  for (const prize of availablePrizes) {
+    currentSum += prize.chance;
+    if (randomValue <= currentSum) {
+      return prize;
+    }
+  }
+}
+</script>
+</body>
+</html>
+
